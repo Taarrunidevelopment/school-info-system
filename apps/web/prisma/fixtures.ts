@@ -1,6 +1,15 @@
 import type { PrismaClient } from "@prisma/client";
 
-export async function createSeedFixtures(prisma: PrismaClient) {
+export type SeedPhones = { teacher: string; admin: string; accountant: string; parent: string };
+
+const DEFAULT_PHONES: SeedPhones = {
+  teacher: "+10000000001",
+  admin: "+10000000002",
+  accountant: "+10000000003",
+  parent: "+10000000004",
+};
+
+export async function createSeedFixtures(prisma: PrismaClient, phones: SeedPhones = DEFAULT_PHONES) {
   const school = await prisma.school.create({ data: { name: "Greenwood High" } });
 
   const academicYear = await prisma.academicYear.create({
@@ -26,19 +35,19 @@ export async function createSeedFixtures(prisma: PrismaClient) {
   });
 
   const teacher = await prisma.user.create({
-    data: { phone: "+10000000001", role: "teacher", name: "Anitha Rao", schoolId: school.id },
+    data: { phone: phones.teacher, role: "teacher", name: "Anitha Rao", schoolId: school.id },
   });
 
   const admin = await prisma.user.create({
-    data: { phone: "+10000000002", role: "admin", name: "Rajesh Kumar", schoolId: school.id },
+    data: { phone: phones.admin, role: "admin", name: "Rajesh Kumar", schoolId: school.id },
   });
 
   const accountant = await prisma.user.create({
-    data: { phone: "+10000000003", role: "accountant", name: "Meena Iyer", schoolId: school.id },
+    data: { phone: phones.accountant, role: "accountant", name: "Meena Iyer", schoolId: school.id },
   });
 
   const parent = await prisma.user.create({
-    data: { phone: "+10000000004", role: "parent", name: "Priya Sharma", schoolId: school.id },
+    data: { phone: phones.parent, role: "parent", name: "Priya Sharma", schoolId: school.id },
   });
 
   const student = await prisma.student.create({
