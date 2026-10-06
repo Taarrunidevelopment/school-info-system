@@ -240,11 +240,11 @@ model Student {
   schoolId        Int
   name            String
   dob             DateTime
-  admissionNo     String        @unique
+  admissionNo     String
   status          StudentStatus @default(active)
   photoUrl        String?
   gender          Gender?
-  studentIdNumber String?       @unique
+  studentIdNumber String?
   dateOfJoin      DateTime?
   address               String?
   bloodGroup            String?
@@ -269,6 +269,8 @@ model Student {
   siblingOfLinks      StudentSibling[]    @relation("StudentSiblingB")
   recordCorrections   RecordCorrection[]
 
+  @@unique([schoolId, admissionNo])
+  @@unique([schoolId, studentIdNumber])
   @@index([schoolId])
 }
 

@@ -666,7 +666,9 @@ describe("students.ts year scope on class validation", () => {
 
     expect(result).toEqual({ ok: false, error: "INVALID_CLASS" });
 
-    const orphan = await prisma.student.findUnique({ where: { admissionNo: "GHOST-001" } });
+    const orphan = await prisma.student.findUnique({
+      where: { schoolId_admissionNo: { schoolId: school.id, admissionNo: "GHOST-001" } },
+    });
     expect(orphan).toBeNull();
     const enrollments = await prisma.enrollment.count({ where: { classId: staleClass.id } });
     expect(enrollments).toBe(0);
