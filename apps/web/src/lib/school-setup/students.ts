@@ -193,11 +193,15 @@ export async function createStudent(
     siblingStudentIds?: number[];
   }
 ): Promise<CreateStudentResult> {
-  const existingAdmission = await prisma.student.findUnique({ where: { admissionNo: input.admissionNo } });
+  const existingAdmission = await prisma.student.findUnique({
+    where: { schoolId_admissionNo: { schoolId, admissionNo: input.admissionNo } },
+  });
   if (existingAdmission) return { ok: false, error: "DUPLICATE_ADMISSION_NO" };
 
   if (input.studentIdNumber) {
-    const existingStudentId = await prisma.student.findUnique({ where: { studentIdNumber: input.studentIdNumber } });
+    const existingStudentId = await prisma.student.findUnique({
+      where: { schoolId_studentIdNumber: { schoolId, studentIdNumber: input.studentIdNumber } },
+    });
     if (existingStudentId) return { ok: false, error: "DUPLICATE_STUDENT_ID" };
   }
 
@@ -374,12 +378,18 @@ export async function editStudent(
   if (!student) return { ok: false, error: "NOT_FOUND" };
 
   if (params.fields.admissionNo && params.fields.admissionNo !== student.admissionNo) {
-    const existing = await prisma.student.findUnique({ where: { admissionNo: params.fields.admissionNo } });
+    const existing = await prisma.student.findUnique({
+      where: { schoolId_admissionNo: { schoolId: params.schoolId, admissionNo: params.fields.admissionNo } },
+    });
     if (existing) return { ok: false, error: "DUPLICATE_ADMISSION_NO" };
   }
 
   if (params.fields.studentIdNumber && params.fields.studentIdNumber !== student.studentIdNumber) {
-    const existing = await prisma.student.findUnique({ where: { studentIdNumber: params.fields.studentIdNumber } });
+    const existing = await prisma.student.findUnique({
+      where: {
+        schoolId_studentIdNumber: { schoolId: params.schoolId, studentIdNumber: params.fields.studentIdNumber },
+      },
+    });
     if (existing) return { ok: false, error: "DUPLICATE_STUDENT_ID" };
   }
 
